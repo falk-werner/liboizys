@@ -194,3 +194,54 @@ TEST(asio_listener, stop_listening)
     ASSERT_TRUE(connected);
     ASSERT_TRUE(accept_called);
 }
+
+TEST(asio_listener, stop_listening_immediatly)
+{
+    boost::asio::io_context context;
+
+    // add time to ensure the test finishes on failure
+    boost::asio::deadline_timer timer(context);
+    timer.expires_from_now(boost::posix_time::seconds(60));
+    bool timeout = false;
+    timer.async_wait([&](auto){
+        timeout = true;
+    });
+
+    std::string const sock_name = "/tmp/com_test_ep.sock";
+    unlink(sock_name.c_str());
+
+    bool connected = false;
+    bool connect_called = false;
+    bool accept_called = false;
+
+    com::asio_listener listener(context, sock_name, [&](auto){
+        accept_called = true;
+    });
+
+    listener.start();
+
+    boost::asio::local::stream_protocol::socket sock(context);
+    boost::asio::local::stream_protocol::endpoint ep(sock_name);
+    sock.async_connect(ep, [&](auto err) {
+        connected = !err;
+        std::cout << "connect " << connected << std::endl;
+        connect_called = true;
+        listener.stop();
+
+        boost::asio::local::stream_protocol::socket sock2(context);
+        sock2.async_connect(ep, [&](auto) {
+            std::cout << "connect " << std::endl;
+            listener.start();
+        });
+    });
+
+
+    while ((!timeout) && (!(connect_called && accept_called)))
+    {
+        context.run_one();
+    }
+
+    ASSERT_FALSE(timeout);
+    ASSERT_TRUE(connected);
+    ASSERT_TRUE(accept_called);
+}
