@@ -10,7 +10,6 @@ namespace com
 class asio_context: public context_i
 {
 public:
-    asio_context();
     virtual ~asio_context() override = default;
     virtual void run() override;
     virtual std::unique_ptr<listener_i> new_listener(std::string const & endpoint, accept_handler handler) override;

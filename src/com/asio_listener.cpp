@@ -7,7 +7,7 @@ namespace com
 asio_listener::asio_listener(boost::asio::io_context & context, std::string const & endpoint,
     accept_handler handler)
 : acceptor(context, boost::asio::local::stream_protocol::endpoint(endpoint))
-, on_accept(handler)
+, on_accept(std::move(handler))
 , is_listening(false)
 {
 
@@ -29,8 +29,8 @@ void asio_listener::stop()
 
 void asio_listener::do_accept()
 {
-    acceptor.async_accept([this](auto ec, auto sock) {
-        if ((ec) || (!is_listening))
+    acceptor.async_accept([this](auto err, auto sock) {
+        if ((err) || (!is_listening))
         { 
             return; 
         }

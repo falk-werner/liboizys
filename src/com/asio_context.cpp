@@ -9,10 +9,6 @@
 namespace com
 {
 
-asio_context::asio_context()
-{
-}
-
 void asio_context::run()
 {
     context.run_one();

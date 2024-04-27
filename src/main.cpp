@@ -27,6 +27,8 @@ void con_write(boost::asio::local::stream_protocol::socket & sock, std::string c
 
 int main(int argc, char* argv[])
 {
+    (void) argc;
+    (void) argv;
 
     boost::asio::io_context context;
 

@@ -38,10 +38,13 @@ private:
 
 int main(int argc, char* argv[])
 {
+    (void) argc;
+    (void) argv;
+
     bool shutdown_requested = false;
     boost::asio::io_context context;
     boost::asio::signal_set signals(context, SIGINT, SIGTERM);
-    signals.async_wait([&context,&shutdown_requested](auto & error, auto id){
+    signals.async_wait([&context,&shutdown_requested](auto, auto){
         shutdown_requested = true;
         context.stop();
     });

@@ -17,10 +17,10 @@ asio_session::~asio_session()
 
 void asio_session::connect_to(std::string const & endpoint, accept_handler handler)
 {
-    boost::asio::local::stream_protocol::endpoint ep(endpoint);
+    boost::asio::local::stream_protocol::endpoint endpoint_(endpoint);
     auto self(shared_from_this());
 
-    socket_.async_connect(ep,[self, handler](auto err) mutable {
+    socket_.async_connect(endpoint_, [self, handler](auto err) mutable {
         if (err)
         {
             self.reset();
