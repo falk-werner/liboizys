@@ -94,6 +94,9 @@ void asio_session::close()
             {
                 // swallow
             }
+
+            on_close = [](){};
+            on_message = [](auto){};
         }
     }
 }

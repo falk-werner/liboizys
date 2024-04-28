@@ -101,9 +101,8 @@ int main(int argc, char* argv[])
                     return;
                 }
                 
-                session->set_on_message([session, &done](auto const & message){
+                session->set_on_message([&done](auto const & message){
                     std::cout << message << std::endl;
-                    session->close();
                     done = true;
                 });
 
