@@ -54,6 +54,52 @@ TEST(asio_session, receive_message)
     ASSERT_EQ("Hi", message);
 }
 
+TEST(asio_session, throw_on_message)
+{
+    boost::asio::io_context context;
+
+    // add time to ensure the test finishes on failure
+    boost::asio::deadline_timer timer(context);
+    timer.expires_from_now(boost::posix_time::seconds(60));
+    bool timeout = false;
+    timer.async_wait([&](auto){
+        timeout = true;
+    });
+
+    boost::asio::local::stream_protocol::socket read_sock(context);
+    boost::asio::local::stream_protocol::socket write_sock(context);
+
+    boost::asio::local::connect_pair(read_sock, write_sock);
+    
+    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    
+    bool closed = false;
+    session->set_on_close([&](){
+        closed = true;
+    });
+
+    std::string message;
+    session->set_on_message([&](std::string const & msg){
+        message = msg;
+        throw std::runtime_error("fail");
+    });
+
+    std::string const data("\0\0\0\x02Hi", 6);
+    boost::asio::async_write(write_sock, boost::asio::buffer(data, data.size()), 
+        [&](auto, auto){
+            write_sock.close();
+    });
+
+    while ((!timeout) && (!closed))
+    {
+        context.run_one();
+    }
+
+    ASSERT_FALSE(timeout);
+    ASSERT_TRUE(closed);
+    ASSERT_EQ("Hi", message);
+}
+
 TEST(asio_session, receive_multiple_messages)
 {
     boost::asio::io_context context;
@@ -125,6 +171,50 @@ TEST(asio_session, close_on_empty_message)
     bool closed = false;
     session->set_on_close([&](){
         closed = true;
+    });
+
+    bool message_received = false;
+    session->set_on_message([&](auto){
+        message_received = true;
+    });
+
+    std::string const data("\0\0\0\0", 4);
+    boost::asio::async_write(write_sock, boost::asio::buffer(data, data.size()), 
+        [](auto, auto){});
+
+    while ((!timeout) && (!closed))
+    {
+        context.run_one();
+    }
+
+    ASSERT_FALSE(timeout);
+    ASSERT_TRUE(closed);
+    ASSERT_FALSE(message_received);
+}
+
+TEST(asio_session, throw_on_close)
+{
+    boost::asio::io_context context;
+
+    // add time to ensure the test finishes on failure
+    boost::asio::deadline_timer timer(context);
+    timer.expires_from_now(boost::posix_time::seconds(60));
+    bool timeout = false;
+    timer.async_wait([&](auto){
+        timeout = true;
+    });
+
+    boost::asio::local::stream_protocol::socket read_sock(context);
+    boost::asio::local::stream_protocol::socket write_sock(context);
+
+    boost::asio::local::connect_pair(read_sock, write_sock);
+    
+    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    
+    bool closed = false;
+    session->set_on_close([&](){
+        closed = true;
+        throw std::runtime_error("fail");
     });
 
     bool message_received = false;

@@ -36,7 +36,14 @@ void asio_listener::do_accept()
         }
 
         auto session = std::make_shared<asio_session>(std::move(sock));
-        on_accept(session);
+        try
+        {
+            on_accept(session);
+        }
+        catch (...)
+        {
+            // swallow
+        }
 
         if (is_listening)
         {

@@ -26,7 +26,14 @@ void asio_session::connect_to(std::string const & endpoint, accept_handler handl
             self.reset();
         }
 
-        handler(self);
+        try
+        {
+            handler(self);
+        }
+        catch (...)
+        {
+            // swallow
+        }
     });
 }
 
@@ -52,7 +59,14 @@ void asio_session::set_on_close(close_handler handler)
 
     if(!socket_.is_open())
     {
-        on_close();
+        try
+        {
+            on_close();
+        }
+        catch (...)
+        {
+            // swallow
+        }
     }
 }
 
@@ -75,7 +89,14 @@ void asio_session::close()
     {
         socket_.close();
         if (on_close) {
-            on_close();
+            try
+            {
+                on_close();
+            }
+            catch(...)
+            {
+                // swallow
+            }
         }
     }
 }
@@ -116,7 +137,15 @@ void asio_session::read_payload(size_t length)
                 return;
             }
 
-            on_message(message_to_read.payload);
+            try
+            {
+                on_message(message_to_read.payload);
+            }
+            catch (...)
+            {
+                // swallow
+            }
+
             read_header();
     });
 }
