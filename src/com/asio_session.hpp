@@ -28,11 +28,14 @@ public:
     virtual void set_on_message(message_handler handler) override;
     virtual void close() override;
 
+    void start();
     void connect_to(std::string const & endpoint, accept_handler handler);
 
 private:
     void read_header();
     void read_payload(size_t length);
+    void write_header();
+    void write_payload();
 
     boost::asio::local::stream_protocol::socket socket_;
     com_message message_to_read;

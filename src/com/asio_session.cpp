@@ -21,7 +21,11 @@ void asio_session::connect_to(std::string const & endpoint, accept_handler handl
     auto self(shared_from_this());
 
     socket_.async_connect(endpoint_, [self, handler](auto err) mutable {
-        if (err)
+        if (!err)
+        {
+            self->start();
+        }
+        else
         {
             self.reset();
         }
@@ -40,12 +44,8 @@ void asio_session::connect_to(std::string const & endpoint, accept_handler handl
 
 void asio_session::send(std::string const & message)
 {
-    if (write_queue.empty()) {
-        // ToDo start writing
-    }
-    else {
-        write_queue.emplace(message);
-    }
+    write_queue.emplace(message);
+    write_header();
 }
 
 void asio_session::set_on_close(close_handler handler)
@@ -78,9 +78,6 @@ void asio_session::set_on_message(message_handler handler)
     }
 
     on_message = std::move(handler);
-
-    read_header();
-    // ToDo begin read
 }
 
 void asio_session::close()
@@ -99,6 +96,11 @@ void asio_session::close()
             }
         }
     }
+}
+
+void asio_session::start()
+{
+    read_header();
 }
 
 void asio_session::read_header()
@@ -137,17 +139,61 @@ void asio_session::read_payload(size_t length)
                 return;
             }
 
-            try
+            if (on_message)
             {
-                on_message(message_to_read.payload);
-            }
-            catch (...)
-            {
-                // swallow
+                try
+                {
+                    on_message(message_to_read.payload);
+                }
+                catch (...)
+                {
+                    // swallow
+                }
             }
 
             read_header();
     });
 }
+
+void asio_session::write_header()
+{
+    if (write_queue.empty()) { return; }
+
+    auto & message = write_queue.front();
+
+    auto self(shared_from_this());
+    boost::asio::async_write(socket_, boost::asio::buffer(message.header, 4),
+        [this, self](auto err, auto){
+            if (err)
+            {
+                close();
+                return;
+            }
+
+            write_payload();
+    });
+}
+
+void asio_session::write_payload()
+{
+    if (write_queue.empty()) { return; }
+
+    auto & message = write_queue.front();
+    
+    auto self(shared_from_this());
+    boost::asio::async_write(socket_, boost::asio::buffer(message.payload, message.payload.size()),
+        [this, self](auto err, auto){
+            if (err)
+            {
+                close();
+                return;
+            }
+
+            write_queue.pop();
+            write_header();
+    });
+}
+
+
 
 }
