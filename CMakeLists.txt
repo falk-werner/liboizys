@@ -6,8 +6,6 @@ option(WITHOUT_TEST "Disable unit test" OFF)
 set(CMAKE_CXX_STANDARD 17)
 add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 set(CMAKE_CXX_CLANG_TIDY clang-tidy -extra-arg=-std=c++17 
-    -extra-arg=-I -extra-arg=/usr/include/c++/11
-    -extra-arg=-I -extra-arg=/usr/include/x86_64-linux-gnu/c++/11
     -checks=-*,modernize-*,readability-*,-modernize-use-trailing-return-type,-clang-diagnostic-error)
 
 find_package(Protobuf REQUIRED)
@@ -41,6 +39,8 @@ set_target_properties(chat_server PROPERTIES CXX_CLANG_TIDY "")
 add_executable(test_client src/main.cpp)
 set_target_properties(test_client PROPERTIES CXX_CLANG_TIDY "")
 
+add_subdirectory(example/echo)
+
 if(NOT(WITHOUT_TEST))
 
 enable_testing()
@@ -60,7 +60,8 @@ add_executable(alltests
     test-src/com/test_asio_borrowed_context.cpp
     test-src/com/test_asio_context.cpp
     test-src/com/test_asio_session.cpp
-    test-src/com/test_asio_session_read.cpp)
+    test-src/com/test_asio_session_read.cpp
+    test-src/com/test_asio_session_write.cpp)
 target_include_directories(alltests PRIVATE src/com)
 
 # disable clang-tidy for unit test executables
