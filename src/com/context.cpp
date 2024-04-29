@@ -1,4 +1,6 @@
 #include "com/context.hpp"
+#include "com/unstable/context.hpp"
+
 #include "asio_context.hpp"
 #include "asio_borrowed_context.hpp"
 
