@@ -10,7 +10,7 @@ namespace
 
 void print_usage()
 {
-    std::cout << R"(echo_client, (C) 2024 Falk Werner
+    std::cout << R"(echo-client, (C) 2024 Falk Werner
 Sample echo client
 
 Usage:

@@ -6,7 +6,9 @@ set_target_properties(chat_proto PROPERTIES CXX_CLANG_TIDY "")
 protobuf_generate(TARGET chat_proto)
 
 add_executable(chat-server chat_server.cpp)
-target_link_libraries(echo-server PRIVATE chat_proto com)
+target_link_libraries(chat-server PRIVATE chat_proto com_shared)
+set_target_properties(chat-server PROPERTIES CXX_CLANG_TIDY "")
 
 add_executable(chat-client chat_client.cpp)
-target_link_libraries(chat-client PRIVATE chat_proto com)
+target_link_libraries(chat-client PRIVATE chat_proto com_shared)
+set_target_properties(chat-client PROPERTIES CXX_CLANG_TIDY "")

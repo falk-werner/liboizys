@@ -19,7 +19,7 @@ Usage:
     echo-server -e <endpoint>
 
 Options:
-    -e, --endpoint <endpoint> - Endpoint to listen (default: /tmp/com_example.sock)
+    -e, --endpoint <endpoint> - Endpoint to listen (default: /tmp/com_example_echo.sock)
     -h, --help                - Prints this message
 
 Example:
