@@ -45,7 +45,10 @@ void asio_session::connect_to(std::string const & endpoint, accept_handler handl
 void asio_session::send(std::string const & message)
 {
     write_queue.emplace(message);
-    write_header();
+    if (write_queue.size() == 1)
+    {
+        write_header();
+    }
 }
 
 void asio_session::set_on_close(close_handler handler)
