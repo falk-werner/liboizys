@@ -85,7 +85,8 @@ void asio_session::close()
     if (socket_.is_open())
     {
         socket_.close();
-        if (on_close) {
+        if (on_close)
+        {
             try
             {
                 on_close();
@@ -96,7 +97,11 @@ void asio_session::close()
             }
 
             on_close = [](){};
-            on_message = [](auto){};
+        }
+    
+        if (on_message)
+        {
+            on_message = [](auto){};            
         }
     }
 }
