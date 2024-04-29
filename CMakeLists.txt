@@ -10,12 +10,12 @@ set(CMAKE_CXX_CLANG_TIDY clang-tidy -extra-arg=-std=c++17
     -checks=-*,modernize-*,readability-*,-modernize-use-trailing-return-type,-clang-diagnostic-error)
 
 add_library(com_obj OBJECT
-    src/com/context.cpp
-    src/com/asio_context.cpp
-    src/com/asio_borrowed_context.cpp
-    src/com/asio_session.cpp
-    src/com/asio_listener.cpp
-    src/com/com_message.cpp)
+    src/context.cpp
+    src/asio_context.cpp
+    src/asio_borrowed_context.cpp
+    src/asio_session.cpp
+    src/asio_listener.cpp
+    src/com_message.cpp)
 set_target_properties(com_obj PROPERTIES
     POSITION_INDEPENDENT_CODE 1
     CXX_VISIBILITY_PRESET hidden
@@ -48,16 +48,16 @@ include(cmake/coverage.cmake)
 
 
 add_executable(alltests 
-    test-src/com/test_com_message.cpp
-    test-src/com/test_asio_listener.cpp
-    test-src/com/test_context.cpp
-    test-src/com/test_unstable_context.cpp
-    test-src/com/test_asio_borrowed_context.cpp
-    test-src/com/test_asio_context.cpp
-    test-src/com/test_asio_session.cpp
-    test-src/com/test_asio_session_read.cpp
-    test-src/com/test_asio_session_write.cpp)
-target_include_directories(alltests PRIVATE src/com)
+    test-src/test_com_message.cpp
+    test-src/test_asio_listener.cpp
+    test-src/test_context.cpp
+    test-src/test_unstable_context.cpp
+    test-src/test_asio_borrowed_context.cpp
+    test-src/test_asio_context.cpp
+    test-src/test_asio_session.cpp
+    test-src/test_asio_session_read.cpp
+    test-src/test_asio_session_write.cpp)
+target_include_directories(alltests PRIVATE src)
 
 # disable clang-tidy for unit test executables
 set_target_properties(alltests PROPERTIES CXX_CLANG_TIDY "")
