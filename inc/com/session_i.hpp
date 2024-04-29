@@ -4,6 +4,9 @@
 #include <functional>
 #include <string>
 
+namespace com
+{
+
 using close_handler = std::function<void(void)>;
 using message_handler = std::function<void(std::string const & message)>;
 
@@ -16,5 +19,7 @@ public:
     virtual void set_on_message(message_handler handler) = 0;
     virtual void close() = 0;
 };
+
+}
 
 #endif
