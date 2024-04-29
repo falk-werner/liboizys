@@ -90,7 +90,6 @@ public:
     console_reader(boost::asio::io_context & context)
     : input(context, STDERR_FILENO)
     {
-
     }
 
     void start(std::shared_ptr<com::session_i> session_)
@@ -99,39 +98,28 @@ public:
         do_read();
     }
 
-    void stop()
-    {
-        session.reset();
-    }
-
-
 private:
     void do_read() {
-        boost::asio::async_read_until(input, inStream, '\n',
-            [this](auto & error, auto){
+        boost::asio::async_read_until(input, buffer, '\n',
+            [this](auto & error, auto length){
                 if (!error)
                 {
-                    std::istream is(&inStream);
-                    std::ostringstream os;
-                    os<<is.rdbuf();
-                    std::string s = os.str();
-                    inStream.consume(s.size()); 
-
-                    if (session)
+                    std::istream stream(&buffer);
+                    std::string message;
+                    if (std::getline(stream, message))
                     {
-                        if (s.size() > 1) {
-                            s.resize(s.size() - 1);
-                            session->send(s);
+                        buffer.consume(length); 
+                        if (message.size() > 0) {
+                            session->send(message);
                         }
                         do_read();
                     }
-                }
+            }
         });
     }
 
-
 private:
-    boost::asio::streambuf inStream;
+    boost::asio::streambuf buffer;
     boost::asio::posix::stream_descriptor input;
     std::shared_ptr<com::session_i> session;
 };
@@ -179,9 +167,8 @@ int main(int argc, char* argv[])
             
             while (!shutdown_requested)
             {
-                context.run();
+                context.run_one();
             }
-            console.stop();
             
         }
         catch (std::exception const & ex)
