@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
-project(liboizys)
+project(liboizys
+    VERSION 0.1.0
+    DESCRIPTION "Interpocess communication library based on boost asio"
+    HOMEPAGE_URL "https://github.com/falk-werner/liboizys"
+    LANGUAGES CXX)
 
 option(WITHOUT_TEST "Disable unit test" OFF)
 option(WITHOUT_EXAMPLES "Disable examples" OFF)
@@ -15,13 +19,14 @@ add_library(oizys_obj OBJECT
     src/asio_borrowed_context.cpp
     src/asio_session.cpp
     src/asio_listener.cpp
-    src/com_message.cpp)
+    src/com_message.cpp
+    src/version.cpp)
 set_target_properties(oizys_obj PROPERTIES
     POSITION_INDEPENDENT_CODE 1
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN 1)
 target_include_directories(oizys_obj PRIVATE inc)
-target_compile_definitions(oizys_obj PRIVATE COM_EXPORT)
+target_compile_definitions(oizys_obj PRIVATE OIZYS_EXPORT)
 
 add_library(oizys_static STATIC $<TARGET_OBJECTS:oizys_obj>)
 target_include_directories(oizys_static PUBLIC inc)
@@ -56,7 +61,8 @@ add_executable(alltests
     test-src/test_asio_context.cpp
     test-src/test_asio_session.cpp
     test-src/test_asio_session_read.cpp
-    test-src/test_asio_session_write.cpp)
+    test-src/test_asio_session_write.cpp
+    test-src/test_version.cpp)
 target_include_directories(alltests PRIVATE src)
 
 # disable clang-tidy for unit test executables
