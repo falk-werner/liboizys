@@ -33,6 +33,13 @@ target_include_directories(oizys_static PUBLIC inc)
 
 add_library(oizys SHARED $<TARGET_OBJECTS:oizys_obj>)
 target_include_directories(oizys PUBLIC inc)
+install(TARGETS oizys)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/inc/
+    DESTINATION include)
+
+configure_file(oizys.pc.in oizys.pc @ONLY) 
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/oizys.pc
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
 
 if(NOT(WITHOUT_EXAMPLES))
 
