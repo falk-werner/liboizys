@@ -10,10 +10,10 @@ namespace oizys
 {
 
 /// @brief Major version of liboizys.
-constexpr int const major_version = 0;
+constexpr int const major_version = 1;
 
 /// @brief Minor version of liboizys.
-constexpr int const minor_version = 1;
+constexpr int const minor_version = 0;
 
 /// @brief Patch version of liboizys.
 constexpr int const patch_version = 0;

@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.20)
 project(liboizys
-    VERSION 0.1.0
+    VERSION 1.0.0
     DESCRIPTION "Interpocess communication library based on boost asio"
     HOMEPAGE_URL "https://github.com/falk-werner/liboizys"
     LANGUAGES CXX)
