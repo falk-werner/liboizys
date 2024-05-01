@@ -142,7 +142,7 @@ private:
                 auto session = oizys::create_session(std::move(sock));
                 auto const id = add(session);
 
-                session->set_onclose([this, id](){
+                session->set_onclose([this, id](auto){
                     std::cout << "info: connection closed" << std::endl;
                     remove(id);
                 });

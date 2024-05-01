@@ -30,6 +30,8 @@ public:
     virtual void set_onmessage(message_handler handler) override;
     virtual void close() override;
 
+    void close_intern(boost::system::error_code err);
+
 private:
     void read_header();
     void read_payload(size_t length);

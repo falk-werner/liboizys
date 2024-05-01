@@ -45,7 +45,7 @@ The API is resembles the widly used [WebSocket API](https://developer.mozilla.or
 Whenever an error occurs the session is closed.
 
 **Note:**  
-*The WebSocket API also specifies an `onerror` handler, which is not available in liboizys. Since each error leads to closing the session, this handler is omitted.*
+*The WebSocket API also specifies an `onerror` handler, which is not available in liboizys. Since each error leads to closing the session, this handler is omitted. The error code is instead provided to the close handler.*
 
 ## Protocol
 

@@ -28,7 +28,7 @@ TEST(asio_session, send_message)
     auto session = std::make_shared<oizys::asio_session>(std::move(write_sock));
     
     bool closed = false;
-    session->set_onclose([&](){
+    session->set_onclose([&](auto){
         closed = true;
     });
     session->set_onmessage([](auto){});
@@ -74,7 +74,7 @@ TEST(asio_session, send_close_on_incomplete_header)
     auto session = std::make_shared<oizys::asio_session>(std::move(write_sock));
     
     bool closed = false;
-    session->set_onclose([&](){
+    session->set_onclose([&](auto){
         closed = true;
     });
     session->set_onmessage([](auto){});
