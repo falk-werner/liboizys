@@ -17,20 +17,20 @@ TEST(asio_session, fail_to_set_close_handler_twice)
     boost::asio::local::stream_protocol::socket read_sock(context);
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
 
-    session->set_on_close([](){});
+    session->set_onclose([](){});
     ASSERT_ANY_THROW({
-        session->set_on_close([](){});
+        session->set_onclose([](){});
     });
 }
 
-TEST(asio_session, throw_on_close_for_closed_session)
+TEST(asio_session, throw_onclose_for_closed_session)
 {
     boost::asio::io_context context;
     boost::asio::local::stream_protocol::socket read_sock(context);
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
 
     session->close();
-    session->set_on_close([](){
+    session->set_onclose([](){
         throw std::runtime_error("fail");
     });
 }
@@ -41,22 +41,22 @@ TEST(asio_session, fail_to_set_message_handler_twice)
     boost::asio::local::stream_protocol::socket read_sock(context);
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
 
-    session->set_on_message([](auto){});
+    session->set_onmessage([](auto){});
     ASSERT_ANY_THROW({
-        session->set_on_message([](auto){});
+        session->set_onmessage([](auto){});
     });
 }
 
-TEST(asio_session, destruct_closed_socket_without_registered_on_message_handler)
+TEST(asio_session, destruct_closed_socket_without_registered_onmessage_handler)
 {
     boost::asio::io_context context;
     boost::asio::local::stream_protocol::socket sock(context);
     auto session = std::make_shared<oizys::asio_session>(std::move(sock));
 
-    session->set_on_close([](){});
+    session->set_onclose([](){});
 }
 
-TEST(asio_session, destruct_closed_socket_without_registered_on_close_handler)
+TEST(asio_session, destruct_closed_socket_without_registered_onclose_handler)
 {
     boost::asio::io_context context;
     boost::asio::local::stream_protocol::socket sock(context);

@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
             sock.connect(app.endpoint);
             auto session = oizys::create_session(std::move(sock));
                 
-            session->set_on_message([&done](auto const & message){
+            session->set_onmessage([&done](auto const & message){
                 std::cout << message << std::endl;
                 done = true;
             });

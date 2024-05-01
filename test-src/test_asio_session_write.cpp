@@ -28,10 +28,10 @@ TEST(asio_session, send_message)
     auto session = std::make_shared<oizys::asio_session>(std::move(write_sock));
     
     bool closed = false;
-    session->set_on_close([&](){
+    session->set_onclose([&](){
         closed = true;
     });
-    session->set_on_message([](auto){});
+    session->set_onmessage([](auto){});
 
     session->send("Hi");
 
@@ -74,10 +74,10 @@ TEST(asio_session, send_close_on_incomplete_header)
     auto session = std::make_shared<oizys::asio_session>(std::move(write_sock));
     
     bool closed = false;
-    session->set_on_close([&](){
+    session->set_onclose([&](){
         closed = true;
     });
-    session->set_on_message([](auto){});
+    session->set_onmessage([](auto){});
 
     session->send("Hi");
 

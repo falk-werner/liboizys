@@ -17,8 +17,8 @@ class session_i
 public:
     virtual ~session_i() = default;
     virtual void send(std::string const & message) = 0;
-    virtual void set_on_close(close_handler handler) = 0;
-    virtual void set_on_message(message_handler handler) = 0;
+    virtual void set_onclose(close_handler handler) = 0;
+    virtual void set_onmessage(message_handler handler) = 0;
     virtual void close() = 0;
 };
 ```
@@ -36,9 +36,9 @@ auto session = oizys::create_session(std::move(sock));
 
 The API is resembles the widly used [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API):
 - the `send` method is used to send messages to a connected peer
-- the `set_on_message` method is used to register a handler that is called whenever a message is received
+- the `set_onmessage` method is used to register a handler that is called whenever a message is received
 - the `close` method is used to close the session
-- the `set_on_close` method is used to register a handler that is called when the session is closed
+- the `set_onclose` method is used to register a handler that is called when the session is closed
 
 Whenever an error occurs the session is closed.
 

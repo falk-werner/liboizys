@@ -11,12 +11,12 @@ namespace oizys
 {
 
 /// @brief Type of handler that is invoked when the session is closed.
-/// @see session_i::set_on_close
+/// @see session_i::set_onclose
 using close_handler = std::function<void(void)>;
 
 /// @brief Type of handler that is invoked when a message is received
 /// @param message message received
-/// @see session_i::set_on_message
+/// @see session_i::set_onmessage
 using message_handler = std::function<void(std::string const & message)>;
 
 /// @brief Session interface.
@@ -49,7 +49,7 @@ public:
     ///
     /// @throws std::exception When a handler is already set.
     /// @param handler Handler that is invoked when the session is closed.
-    virtual void set_on_close(close_handler handler) = 0;
+    virtual void set_onclose(close_handler handler) = 0;
 
     /// @brief Sets a handler that is invoked whe a message is received.
     ///
@@ -59,7 +59,7 @@ public:
     ///
     /// @throws std::exception When a handler is already set.
     /// @param handler 
-    virtual void set_on_message(message_handler handler) = 0;
+    virtual void set_onmessage(message_handler handler) = 0;
 
     /// @brief Closes the session.
     ///

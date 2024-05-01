@@ -26,8 +26,8 @@ public:
     asio_session(boost::asio::local::stream_protocol::socket sock);
     virtual ~asio_session() override;
     virtual void send(std::string const & message) override;
-    virtual void set_on_close(close_handler handler) override;
-    virtual void set_on_message(message_handler handler) override;
+    virtual void set_onclose(close_handler handler) override;
+    virtual void set_onmessage(message_handler handler) override;
     virtual void close() override;
 
 private:
@@ -39,8 +39,8 @@ private:
     boost::asio::local::stream_protocol::socket socket_;
     com_message message_to_read;
     std::queue<com_message> write_queue;
-    message_handler on_message;
-    close_handler on_close;
+    message_handler onmessage;
+    close_handler onclose;
 };
 
 }

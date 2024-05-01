@@ -27,20 +27,20 @@ void asio_session::send(std::string const & message)
     }
 }
 
-void asio_session::set_on_close(close_handler handler)
+void asio_session::set_onclose(close_handler handler)
 {
-    if (on_close)
+    if (onclose)
     {
         throw std::runtime_error("handler already set");
     }
 
-    on_close = std::move(handler);
+    onclose = std::move(handler);
 
     if(!socket_.is_open())
     {
         try
         {
-            on_close();
+            onclose();
         }
         catch (...)
         {
@@ -49,14 +49,14 @@ void asio_session::set_on_close(close_handler handler)
     }
 }
 
-void asio_session::set_on_message(message_handler handler)
+void asio_session::set_onmessage(message_handler handler)
 {
-    if (on_message)
+    if (onmessage)
     {
         throw std::runtime_error("handler already set");        
     }
 
-    on_message = std::move(handler);
+    onmessage = std::move(handler);
     read_header();
 }
 
@@ -65,23 +65,23 @@ void asio_session::close()
     if (socket_.is_open())
     {
         socket_.close();
-        if (on_close)
+        if (onclose)
         {
             try
             {
-                on_close();
+                onclose();
             }
             catch(...)
             {
                 // swallow
             }
 
-            on_close = [](){};
+            onclose = [](){};
         }
     
-        if (on_message)
+        if (onmessage)
         {
-            on_message = [](auto){};            
+            onmessage = [](auto){};            
         }
     }
 }
@@ -122,11 +122,11 @@ void asio_session::read_payload(size_t length)
                 return;
             }
 
-            if (on_message)
+            if (onmessage)
             {
                 try
                 {
-                    on_message(message_to_read.payload);
+                    onmessage(message_to_read.payload);
                 }
                 catch (...)
                 {

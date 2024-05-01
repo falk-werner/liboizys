@@ -142,12 +142,12 @@ private:
                 auto session = oizys::create_session(std::move(sock));
                 auto const id = add(session);
 
-                session->set_on_close([this, id](){
+                session->set_onclose([this, id](){
                     std::cout << "info: connection closed" << std::endl;
                     remove(id);
                 });
 
-                session->set_on_message([this, id](auto const & message){
+                session->set_onmessage([this, id](auto const & message){
                     chat::chat_message msg;
                     if (msg.ParseFromString(message))
                     {

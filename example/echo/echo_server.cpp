@@ -91,11 +91,11 @@ private:
                 std::cout << "info: new connection" << std::endl;
 
                 auto session = oizys::create_session(std::move(sock));
-                session->set_on_close([](){
+                session->set_onclose([](){
                     std::cout << "info: connection closed" << std::endl;
                 });
 
-                session->set_on_message([session](auto const & message){
+                session->set_onmessage([session](auto const & message){
                     std::cout << message << std::endl;
                     session->send(message);
                 });

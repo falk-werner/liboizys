@@ -31,12 +31,12 @@ TEST(asio_session, receive_message)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
 
     bool closed = false;
-    session->set_on_close([&](){
+    session->set_onclose([&](){
         closed = true;
     });
 
     std::string message;
-    session->set_on_message([&](std::string const & msg){
+    session->set_onmessage([&](std::string const & msg){
         message = msg;
     });    
 
@@ -56,7 +56,7 @@ TEST(asio_session, receive_message)
     ASSERT_EQ("Hi", message);
 }
 
-TEST(asio_session, throw_on_message)
+TEST(asio_session, throw_onmessage)
 {
     boost::asio::io_context context;
 
@@ -76,12 +76,12 @@ TEST(asio_session, throw_on_message)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_on_close([&](){
+    session->set_onclose([&](){
         closed = true;
     });
 
     std::string message;
-    session->set_on_message([&](std::string const & msg){
+    session->set_onmessage([&](std::string const & msg){
         message = msg;
         throw std::runtime_error("fail");
     });
@@ -122,12 +122,12 @@ TEST(asio_session, receive_multiple_messages)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_on_close([&](){
+    session->set_onclose([&](){
         closed = true;
     });
 
     std::vector<std::string> messages;
-    session->set_on_message([&](std::string const & message){
+    session->set_onmessage([&](std::string const & message){
         messages.push_back(message);
     });
 
@@ -171,12 +171,12 @@ TEST(asio_session, close_on_empty_message)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_on_close([&](){
+    session->set_onclose([&](){
         closed = true;
     });
 
     bool message_received = false;
-    session->set_on_message([&](auto){
+    session->set_onmessage([&](auto){
         message_received = true;
     });
 
@@ -194,7 +194,7 @@ TEST(asio_session, close_on_empty_message)
     ASSERT_FALSE(message_received);
 }
 
-TEST(asio_session, throw_on_close)
+TEST(asio_session, throw_onclose)
 {
     boost::asio::io_context context;
 
@@ -214,13 +214,13 @@ TEST(asio_session, throw_on_close)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_on_close([&](){
+    session->set_onclose([&](){
         closed = true;
         throw std::runtime_error("fail");
     });
 
     bool message_received = false;
-    session->set_on_message([&](auto){
+    session->set_onmessage([&](auto){
         message_received = true;
     });
 
@@ -258,12 +258,12 @@ TEST(asio_session, close_on_incomplete_header)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_on_close([&](){
+    session->set_onclose([&](){
         closed = true;
     });
 
     bool message_received = false;
-    session->set_on_message([&](auto){
+    session->set_onmessage([&](auto){
         message_received = true;
     });
 
@@ -303,12 +303,12 @@ TEST(asio_session, close_on_incomplete_payload)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_on_close([&](){
+    session->set_onclose([&](){
         closed = true;
     });
 
     bool message_received = false;
-    session->set_on_message([&](auto){
+    session->set_onmessage([&](auto){
         message_received = true;
     });
 

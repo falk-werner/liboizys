@@ -141,14 +141,14 @@ private:
                 auto session = oizys::create_session(std::move(sock));
                 auto const id = add(session);
 
-                session->set_on_close([this, id](){
+                session->set_onclose([this, id](){
                     std::cout << "info: connection closed" << std::endl;
                     remove(id);
                 });
 
                 // set on message handler to start reading
                 // this allows to detect a closed connection
-                session->set_on_message([](auto){});
+                session->set_onmessage([](auto){});
             }
 
             do_accept();
