@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: Copyright 2024 Falk Werner
+
 find_package(Protobuf REQUIRED)
 add_library(chat_proto STATIC messages.proto)
 target_include_directories(chat_proto PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${Protobuf_INCLUDE_DIRS})

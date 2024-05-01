@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: Copyright 2024 Falk Werner
+
 cmake_minimum_required(VERSION 3.20)
 project(liboizys
     VERSION 0.1.0

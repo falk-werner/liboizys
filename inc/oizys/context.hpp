@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: Copyright 2024 Falk Werner
+
 #ifndef OIZYS_CONTEXT_HPP
 #define OIZYS_CONTEXT_HPP
 

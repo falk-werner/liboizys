@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: Copyright 2024 Falk Werner
+
 set(CMAKE_C_FLAGS_COVERAGE
     "${CMAKE_C_FLAGS_DEBUG} -pg --coverage -fprofile-arcs -ftest-coverage"
     CACHE STRING "Flags used by the C compiler during coverage builds"

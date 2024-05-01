@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: Copyright 2024 Falk Werner
 
 #include "asio_session.hpp"
 

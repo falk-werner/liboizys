@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: Copyright 2024 Falk Werner
+
 #ifndef OIZYS_COM_MESSAGE_HPP
 #define OIZYS_COM_MESSAGE_HPP
 
