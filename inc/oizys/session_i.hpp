@@ -6,13 +6,14 @@
 
 #include <functional>
 #include <string>
+#include <boost/asio.hpp>
 
 namespace oizys
 {
 
 /// @brief Type of handler that is invoked when the session is closed.
 /// @see session_i::set_onclose
-using close_handler = std::function<void(void)>;
+using close_handler = std::function<void(boost::system::error_code err)>;
 
 /// @brief Type of handler that is invoked when a message is received
 /// @param message message received

@@ -40,7 +40,8 @@ void asio_session::set_onclose(close_handler handler)
     {
         try
         {
-            onclose();
+            boost::system::error_code err;
+            onclose(err);
         }
         catch (...)
         {
@@ -62,6 +63,12 @@ void asio_session::set_onmessage(message_handler handler)
 
 void asio_session::close()
 {
+    boost::system::error_code err;
+    close_intern(err);
+}
+
+void asio_session::close_intern(boost::system::error_code err)
+{
     if (socket_.is_open())
     {
         socket_.close();
@@ -69,14 +76,14 @@ void asio_session::close()
         {
             try
             {
-                onclose();
+                onclose(err);
             }
             catch(...)
             {
                 // swallow
             }
 
-            onclose = [](){};
+            onclose = [](auto){};
         }
     
         if (onmessage)
@@ -93,14 +100,14 @@ void asio_session::read_header()
         [this, self](auto err, auto) {
             if (err)
             {
-                close();
+                close_intern(err);
                 return;
             }
 
             size_t length;
             if (!message_to_read.parse_header(length))
             {
-                close();
+                close_intern({EBADMSG, boost::system::generic_category()});
                 return;
             }
             
@@ -118,7 +125,7 @@ void asio_session::read_payload(size_t length)
         [this, self](auto err, auto) {
             if (err)
             {
-                close();
+                close_intern(err);
                 return;
             }
 
@@ -149,7 +156,7 @@ void asio_session::write_header()
         [this, self](auto err, auto){
             if (err)
             {
-                close();
+                close_intern(err);
                 return;
             }
 
@@ -168,7 +175,7 @@ void asio_session::write_payload()
         [this, self](auto err, auto){
             if (err)
             {
-                close();
+                close_intern(err);
                 return;
             }
 

@@ -31,7 +31,7 @@ TEST(asio_session, receive_message)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
 
     bool closed = false;
-    session->set_onclose([&](){
+    session->set_onclose([&](auto){
         closed = true;
     });
 
@@ -76,7 +76,7 @@ TEST(asio_session, throw_onmessage)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_onclose([&](){
+    session->set_onclose([&](auto){
         closed = true;
     });
 
@@ -122,7 +122,7 @@ TEST(asio_session, receive_multiple_messages)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_onclose([&](){
+    session->set_onclose([&](auto){
         closed = true;
     });
 
@@ -171,7 +171,7 @@ TEST(asio_session, close_on_empty_message)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_onclose([&](){
+    session->set_onclose([&](auto){
         closed = true;
     });
 
@@ -214,7 +214,7 @@ TEST(asio_session, throw_onclose)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_onclose([&](){
+    session->set_onclose([&](auto){
         closed = true;
         throw std::runtime_error("fail");
     });
@@ -258,7 +258,7 @@ TEST(asio_session, close_on_incomplete_header)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_onclose([&](){
+    session->set_onclose([&](auto){
         closed = true;
     });
 
@@ -303,7 +303,7 @@ TEST(asio_session, close_on_incomplete_payload)
     auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     
     bool closed = false;
-    session->set_onclose([&](){
+    session->set_onclose([&](auto){
         closed = true;
     });
 

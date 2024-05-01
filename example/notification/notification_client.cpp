@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
             boost::asio::local::stream_protocol::socket sock(context);
             sock.connect(app.endpoint);
             auto session = oizys::create_session(std::move(sock));
-            session->set_onclose([&shutdown_requested](){
+            session->set_onclose([&shutdown_requested](auto){
                 shutdown_requested = true;
             });
             session->set_onmessage([](auto const & message){
