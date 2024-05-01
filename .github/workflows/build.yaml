@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install libprotobuf-dev libgtest-dev libgmock-dev valgrind
+          sudo apt install libprotobuf-dev libboost-all-dev libgtest-dev libgmock-dev valgrind
 
       - name: Configure
         run: |
