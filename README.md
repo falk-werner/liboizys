@@ -31,7 +31,7 @@ An instance of a session can be created using the `create_session` method:
 boost::asio::io_context context;
 boost::asio::local::stream_protocol::socket sock(context);
 
-// Connect session
+// ToDo: Connect socket
 
 auto session = oizys::create_session(std::move(sock));
 ```
