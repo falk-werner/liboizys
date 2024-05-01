@@ -13,6 +13,9 @@
 namespace oizys
 {
 
+/// @brief Creates a new session.
+/// @param sock An already connected socket that will be associated with the session.
+/// @return A newly created session.
 OIZYS_API std::shared_ptr<session_i> create_session(boost::asio::local::stream_protocol::socket sock);
 
 }
