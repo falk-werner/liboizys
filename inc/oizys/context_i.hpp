@@ -1,13 +1,13 @@
-#ifndef COM_CONTEXT_I_HPP
-#define COM_CONTEXT_I_HPP
+#ifndef OIZYS_CONTEXT_I_HPP
+#define OIZYS_CONTEXT_I_HPP
 
-#include <com/accept_handler.hpp>
-#include <com/listener_i.hpp>
+#include <oizys/accept_handler.hpp>
+#include <oizys/listener_i.hpp>
 
 #include <memory>
 #include <string>
 
-namespace com
+namespace oizys
 {
 
 class context_i

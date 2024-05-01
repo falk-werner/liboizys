@@ -26,7 +26,7 @@ TEST(asio_session, receive_message)
 
     boost::asio::local::connect_pair(read_sock, write_sock);
     
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     session->start();
 
     bool closed = false;
@@ -72,7 +72,7 @@ TEST(asio_session, throw_on_message)
 
     boost::asio::local::connect_pair(read_sock, write_sock);
     
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     session->start();
     
     bool closed = false;
@@ -119,7 +119,7 @@ TEST(asio_session, receive_multiple_messages)
 
     boost::asio::local::connect_pair(read_sock, write_sock);
     
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     session->start();
     
     bool closed = false;
@@ -169,7 +169,7 @@ TEST(asio_session, close_on_empty_message)
 
     boost::asio::local::connect_pair(read_sock, write_sock);
     
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     session->start();
     
     bool closed = false;
@@ -213,7 +213,7 @@ TEST(asio_session, throw_on_close)
 
     boost::asio::local::connect_pair(read_sock, write_sock);
     
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     session->start();
     
     bool closed = false;
@@ -258,7 +258,7 @@ TEST(asio_session, close_on_incomplete_header)
 
     boost::asio::local::connect_pair(read_sock, write_sock);
     
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     session->start();
     
     bool closed = false;
@@ -304,7 +304,7 @@ TEST(asio_session, close_on_incomplete_payload)
 
     boost::asio::local::connect_pair(read_sock, write_sock);
     
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     session->start();
     
     bool closed = false;

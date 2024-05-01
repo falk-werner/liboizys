@@ -1,10 +1,10 @@
-#include "com/context.hpp"
-#include "com/unstable/context.hpp"
+#include "oizys/context.hpp"
+#include "oizys/unstable/context.hpp"
 
 #include "asio_context.hpp"
 #include "asio_borrowed_context.hpp"
 
-namespace com
+namespace oizys
 {
 
 std::unique_ptr<context_i> context_new()

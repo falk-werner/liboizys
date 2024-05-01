@@ -1,9 +1,9 @@
-#ifndef COM_COM_MESSAGE_HPP
-#define COM_COM_MESSAGE_HPP
+#ifndef OIZYS_COM_MESSAGE_HPP
+#define OIZYS_COM_MESSAGE_HPP
 
 #include <string>
 
-namespace com
+namespace oizys
 {
 
 struct com_message

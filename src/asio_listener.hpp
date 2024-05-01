@@ -1,11 +1,11 @@
-#ifndef COM_ASIO_LISTENER_HPP
-#define COM_ASIO_LISTENER_HPP
+#ifndef OIZYS_ASIO_LISTENER_HPP
+#define OIZYS_ASIO_LISTENER_HPP
 
-#include "com/listener_i.hpp"
-#include "com/context_i.hpp" // accept_handler
+#include "oizys/listener_i.hpp"
+#include "oizys/context_i.hpp" // accept_handler
 #include <boost/asio.hpp>
 
-namespace com
+namespace oizys
 {
 
 class asio_listener: public listener_i

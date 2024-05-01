@@ -1,5 +1,5 @@
-#include <com/com.hpp>
-#include <com/unstable/context.hpp>
+#include <oizys/oizys.hpp>
+#include <oizys/unstable/context.hpp>
 
 #include <getopt.h>
 #include <unistd.h>
@@ -87,7 +87,7 @@ public:
         }
     }
 
-    uint32_t add(std::shared_ptr<com::session_i> session)
+    uint32_t add(std::shared_ptr<oizys::session_i> session)
     {
         auto const id = create_id();
         sessions.emplace(id, session);
@@ -141,7 +141,7 @@ private:
         return (it != sessions.end());
     }
 
-    std::unordered_map<uint32_t, std::shared_ptr<com::session_i>> sessions;
+    std::unordered_map<uint32_t, std::shared_ptr<oizys::session_i>> sessions;
     uint32_t id = 0;
 };
 
@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
             });
 
             unlink(app.endpoint.c_str());
-            auto com_context = com::context_from_asio(context);
+            auto com_context = oizys::context_from_asio(context);
             auto listener = com_context->new_listener(app.endpoint, [manager](auto session){
                 std::cout << "info: new connection" << std::endl;
 

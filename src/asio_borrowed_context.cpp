@@ -6,7 +6,7 @@
 
 #include <stdexcept>
 
-namespace com
+namespace oizys
 {
 
 asio_borrowed_context::asio_borrowed_context(boost::asio::io_context& context)

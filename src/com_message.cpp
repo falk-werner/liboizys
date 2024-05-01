@@ -1,7 +1,7 @@
 #include "com_message.hpp"
 #include <stdexcept>
 
-namespace com
+namespace oizys
 {
 
 constexpr size_t const com_max_message_size = 0x00ffffff;

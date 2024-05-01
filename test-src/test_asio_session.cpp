@@ -13,7 +13,7 @@ TEST(asio_session, fail_to_set_close_handler_twice)
 {
     boost::asio::io_context context;
     boost::asio::local::stream_protocol::socket read_sock(context);
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
 
     session->set_on_close([](){});
     ASSERT_ANY_THROW({
@@ -25,7 +25,7 @@ TEST(asio_session, throw_on_close_for_closed_session)
 {
     boost::asio::io_context context;
     boost::asio::local::stream_protocol::socket read_sock(context);
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
 
     session->close();
     session->set_on_close([](){
@@ -37,7 +37,7 @@ TEST(asio_session, fail_to_set_message_handler_twice)
 {
     boost::asio::io_context context;
     boost::asio::local::stream_protocol::socket read_sock(context);
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
 
     session->set_on_message([](auto){});
     ASSERT_ANY_THROW({
@@ -61,7 +61,7 @@ TEST(asio_session, fail_to_connect_to_non_existing_endpoint)
     unlink(endpoint.c_str());
 
     boost::asio::local::stream_protocol::socket read_sock(context);
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
 
     bool connect_called = false;
     bool session_okay = false;
@@ -97,12 +97,12 @@ TEST(asio_session, handle_exception_on_connect)
 
     bool connect_called = false;
 
-    com::asio_listener listener(context, sock_name, [&](auto){});
+    oizys::asio_listener listener(context, sock_name, [&](auto){});
 
     listener.start();
 
     boost::asio::local::stream_protocol::socket read_sock(context);
-    auto session = std::make_shared<com::asio_session>(std::move(read_sock));
+    auto session = std::make_shared<oizys::asio_session>(std::move(read_sock));
     session->connect_to(sock_name, [&](auto) {
         connect_called = true;
         throw std::runtime_error("fail");

@@ -1,12 +1,12 @@
-#ifndef COM_ACCEPT_HANDLER_HPP
-#define COM_ACCEPT_HANDLER_HPP
+#ifndef OIZYS_ACCEPT_HANDLER_HPP
+#define OIZYS_ACCEPT_HANDLER_HPP
 
-#include <com/session_i.hpp>
+#include <oizys/session_i.hpp>
 
 #include <functional>
 #include <memory>
 
-namespace com
+namespace oizys
 {
 
 using accept_handler = std::function<void(std::shared_ptr<session_i>)>;

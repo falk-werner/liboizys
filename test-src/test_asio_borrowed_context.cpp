@@ -5,7 +5,7 @@
 TEST(asio_borrowed_context, all)
 {
     boost::asio::io_context context;
-    com::asio_borrowed_context com_context(context);
+    oizys::asio_borrowed_context com_context(context);
 
     // add time to ensure the test finishes on failure
     boost::asio::deadline_timer timer(context);

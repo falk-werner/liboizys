@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(asio-example)
+project(liboizys)
 
 option(WITHOUT_TEST "Disable unit test" OFF)
 option(WITHOUT_EXAMPLES "Disable examples" OFF)
@@ -9,25 +9,25 @@ add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 set(CMAKE_CXX_CLANG_TIDY clang-tidy -extra-arg=-std=c++17 
     -checks=-*,modernize-*,readability-*,-modernize-use-trailing-return-type,-clang-diagnostic-error)
 
-add_library(com_obj OBJECT
+add_library(oizys_obj OBJECT
     src/context.cpp
     src/asio_context.cpp
     src/asio_borrowed_context.cpp
     src/asio_session.cpp
     src/asio_listener.cpp
     src/com_message.cpp)
-set_target_properties(com_obj PROPERTIES
+set_target_properties(oizys_obj PROPERTIES
     POSITION_INDEPENDENT_CODE 1
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN 1)
-target_include_directories(com_obj PRIVATE inc)
-target_compile_definitions(com_obj PRIVATE COM_EXPORT)
+target_include_directories(oizys_obj PRIVATE inc)
+target_compile_definitions(oizys_obj PRIVATE COM_EXPORT)
 
-add_library(com STATIC $<TARGET_OBJECTS:com_obj>)
-target_include_directories(com PUBLIC inc)
+add_library(oizys_static STATIC $<TARGET_OBJECTS:oizys_obj>)
+target_include_directories(oizys_static PUBLIC inc)
 
-add_library(com_shared SHARED $<TARGET_OBJECTS:com_obj>)
-target_include_directories(com_shared PUBLIC inc)
+add_library(oizys SHARED $<TARGET_OBJECTS:oizys_obj>)
+target_include_directories(oizys PUBLIC inc)
 
 if(NOT(WITHOUT_EXAMPLES))
 
@@ -62,7 +62,7 @@ target_include_directories(alltests PRIVATE src)
 # disable clang-tidy for unit test executables
 set_target_properties(alltests PROPERTIES CXX_CLANG_TIDY "")
 
-target_link_libraries(alltests PRIVATE com GTest::gtest GTest::gtest_main)
+target_link_libraries(alltests PRIVATE oizys_static GTest::gtest GTest::gtest_main)
 gtest_discover_tests(alltests EXTRA_ARGS "--gtest_output=xml:test-results.xml")
 
 add_custom_target(coverage

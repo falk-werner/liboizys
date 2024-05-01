@@ -9,7 +9,7 @@ TEST(asio_listener, construct)
     std::string const sock_name = "/tmp/com_test_ep.sock";
     unlink(sock_name.c_str());
 
-    com::asio_listener listener(context, sock_name, [&](auto){});
+    oizys::asio_listener listener(context, sock_name, [&](auto){});
 }
 
 TEST(asio_listener, accept)
@@ -31,7 +31,7 @@ TEST(asio_listener, accept)
     bool connect_called = false;
     bool accept_called = false;
 
-    com::asio_listener listener(context, sock_name, [&](auto){
+    oizys::asio_listener listener(context, sock_name, [&](auto){
         accept_called = true;
     });
 
@@ -70,7 +70,7 @@ TEST(asio_listener, accept_multiple)
     unlink(sock_name.c_str());
 
     int accept_count = 0;
-    com::asio_listener listener(context, sock_name, [&](auto){
+    oizys::asio_listener listener(context, sock_name, [&](auto){
         accept_count++;
     });
 
@@ -129,7 +129,7 @@ TEST(asio_listener, accept_double_start)
     bool connect_called = false;
     bool accept_called = false;
 
-    com::asio_listener listener(context, sock_name, [&](auto){
+    oizys::asio_listener listener(context, sock_name, [&](auto){
         accept_called = true;
     });
 
@@ -172,7 +172,7 @@ TEST(asio_listener, stop_listening)
     bool connect_called = false;
     bool accept_called = false;
 
-    com::asio_listener listener(context, sock_name, [&](auto){
+    oizys::asio_listener listener(context, sock_name, [&](auto){
         accept_called = true;
         listener.stop();
     });
@@ -215,7 +215,7 @@ TEST(asio_listener, stop_listening_immediatly)
     bool connect_called = false;
     bool accept_called = false;
 
-    com::asio_listener listener(context, sock_name, [&](auto){
+    oizys::asio_listener listener(context, sock_name, [&](auto){
         accept_called = true;
     });
 
@@ -264,7 +264,7 @@ TEST(asio_listener, handle_exception_on_accept)
     bool connect_called = false;
     bool accept_called = false;
 
-    com::asio_listener listener(context, sock_name, [&](auto){
+    oizys::asio_listener listener(context, sock_name, [&](auto){
         accept_called = true;
         throw std::runtime_error("foo");
     });

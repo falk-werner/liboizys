@@ -1,10 +1,10 @@
-#ifndef COM_ASIO_BORROWED_CONTEXT_HPP
-#define COM_ASIO_BORROWED_CONTEXT_HPP
+#ifndef OIZYS_ASIO_BORROWED_CONTEXT_HPP
+#define OIZYS_ASIO_BORROWED_CONTEXT_HPP
 
-#include "com/context_i.hpp"
+#include "oizys/context_i.hpp"
 #include <boost/asio.hpp>
 
-namespace com
+namespace oizys
 {
 
 class asio_borrowed_context: public context_i

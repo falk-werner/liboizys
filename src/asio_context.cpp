@@ -6,7 +6,7 @@
 
 #include <stdexcept>
 
-namespace com
+namespace oizys
 {
 
 void asio_context::run()

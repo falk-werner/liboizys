@@ -1,7 +1,7 @@
-#ifndef COM_LISTENER_I_HPP
-#define COM_LISTENER_I_HPP
+#ifndef OIZYS_LISTENER_I_HPP
+#define OIZYS_LISTENER_I_HPP
 
-namespace com
+namespace oizys
 {
 
 class listener_i

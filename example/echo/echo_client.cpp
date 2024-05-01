@@ -1,4 +1,4 @@
-#include <com/com.hpp>
+#include <oizys/oizys.hpp>
 
 #include <getopt.h>
 
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
     {
         try 
         {
-            auto context = com::context_new();
+            auto context = oizys::context_new();
             bool done = false;
 
             context->connect_to(app.endpoint, [&app, &done](auto session){

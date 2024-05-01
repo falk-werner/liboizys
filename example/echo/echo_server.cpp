@@ -1,5 +1,5 @@
-#include <com/com.hpp>
-#include <com/unstable/context.hpp>
+#include <oizys/oizys.hpp>
+#include <oizys/unstable/context.hpp>
 
 #include <getopt.h>
 #include <unistd.h>
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
             });
 
             unlink(app.endpoint.c_str());
-            auto com_context = com::context_from_asio(context);
+            auto com_context = oizys::context_from_asio(context);
             auto listener = com_context->new_listener(app.endpoint, [](auto session){
                 std::cout << "info: new connection" << std::endl;
 

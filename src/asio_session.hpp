@@ -1,8 +1,8 @@
-#ifndef COM_ASIO_SESSION_HPP
-#define COM_ASIO_SESSION_HPP
+#ifndef OIZYS_ASIO_SESSION_HPP
+#define OIZYS_ASIO_SESSION_HPP
 
-#include "com/session_i.hpp"
-#include "com/accept_handler.hpp"
+#include "oizys/session_i.hpp"
+#include "oizys/accept_handler.hpp"
 
 #include "com_message.hpp"
 
@@ -11,7 +11,7 @@
 #include <queue>
 #include <memory>
 
-namespace com
+namespace oizys
 {
 
 class asio_session

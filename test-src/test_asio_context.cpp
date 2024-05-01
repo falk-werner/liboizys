@@ -4,7 +4,7 @@
 
 TEST(asio_context, all)
 {
-    com::asio_context context;
+    oizys::asio_context context;
 
     std::string const sock_name("/tmp/com_test.sock");
     unlink(sock_name.c_str());

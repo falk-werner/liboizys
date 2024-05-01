@@ -1,7 +1,7 @@
 #include "asio_session.hpp"
 #include <stdexcept>
 
-namespace com
+namespace oizys
 {
 
 asio_session::asio_session(boost::asio::local::stream_protocol::socket sock)

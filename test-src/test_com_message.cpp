@@ -4,13 +4,13 @@
 
 TEST(com_message, construct_default)
 {
-    com::com_message message;
+    oizys::com_message message;
 }
 
 TEST(com_message, construct_by_content)
 {
     std::string const content("some message");
-    com::com_message message(content);
+    oizys::com_message message(content);
 
     ASSERT_EQ(content, message.payload);
     ASSERT_EQ(0, message.header[0]);
@@ -22,7 +22,7 @@ TEST(com_message, construct_by_content)
 TEST(com_message, construct_large_message)
 {
     std::string const content(0x123456, ' ');
-    com::com_message message(content);
+    oizys::com_message message(content);
 
     ASSERT_EQ(content, message.payload);
     ASSERT_EQ(0, message.header[0]);
@@ -33,7 +33,7 @@ TEST(com_message, construct_large_message)
 TEST(com_message, construct_max_size_message)
 {
     std::string const content(0xffffff, ' ');
-    com::com_message message(content);
+    oizys::com_message message(content);
 
     ASSERT_EQ(content, message.payload);
     ASSERT_EQ(0, message.header[0]);
@@ -46,7 +46,7 @@ TEST(com_message, fail_to_construct_empty_message)
 {
     std::string const content;
     ASSERT_ANY_THROW({
-        com::com_message message(content);
+        oizys::com_message message(content);
     });
 }
 
@@ -54,6 +54,6 @@ TEST(com_message, fail_to_construct_too_large_message)
 {
     std::string const content(0x1000000, ' ');
     ASSERT_ANY_THROW({
-        com::com_message message(content);
+        oizys::com_message message(content);
     });
 }

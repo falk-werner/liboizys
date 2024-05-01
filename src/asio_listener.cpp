@@ -1,7 +1,7 @@
 #include "asio_listener.hpp"
 #include "asio_session.hpp"
 
-namespace com
+namespace oizys
 {
 
 asio_listener::asio_listener(boost::asio::io_context & context, std::string const & endpoint,

@@ -1,5 +1,5 @@
-#include <com/com.hpp>
-#include <com/unstable/context.hpp>
+#include <oizys/oizys.hpp>
+#include <oizys/unstable/context.hpp>
 
 #include <getopt.h>
 #include <unistd.h>
@@ -92,7 +92,7 @@ public:
     {
     }
 
-    void start(std::shared_ptr<com::session_i> session_)
+    void start(std::shared_ptr<oizys::session_i> session_)
     {
         session = session_;
         do_read();
@@ -121,7 +121,7 @@ private:
 private:
     boost::asio::streambuf buffer;
     boost::asio::posix::stream_descriptor input;
-    std::shared_ptr<com::session_i> session;
+    std::shared_ptr<oizys::session_i> session;
 };
 
 }
@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
 
             console_reader console(context);
 
-            auto com_context = com::context_from_asio(context);
+            auto com_context = oizys::context_from_asio(context);
             com_context->connect_to(app.endpoint, [&](auto session){
                 if (!session)
                 {

@@ -1,10 +1,10 @@
-#ifndef COM_SESSION_I_HPP
-#define COM_SESSION_I_HPP
+#ifndef OIZYS_SESSION_I_HPP
+#define OIZYS_SESSION_I_HPP
 
 #include <functional>
 #include <string>
 
-namespace com
+namespace oizys
 {
 
 using close_handler = std::function<void(void)>;
