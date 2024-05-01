@@ -1,3 +1,5 @@
+[![Build](https://github.com/falk-werner/liboizys/actions/workflows/build.yaml/badge.svg)](https://github.com/falk-werner/liboizys/actions/workflows/build.yaml)
+
 # liboizys
 
 Liboizys is a interprocess communication library based on 
