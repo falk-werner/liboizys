@@ -1,4 +1,5 @@
 /build/
 /doc/
+/install/
 /.vscode/
 /.clang-tidy
