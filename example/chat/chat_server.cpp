@@ -104,7 +104,7 @@ public:
         }
     }
 
-    std::shared_ptr<com::session_i> get(uint32_t id)
+    std::shared_ptr<oizys::session_i> get(uint32_t id)
     {
         auto it = sessions.find(id);
         if (it == sessions.end())
