@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: Copyright 2024 Falk Werner
 
 #include <oizys/oizys.hpp>
-#include "messages.pb.h"
 
 #include <getopt.h>
 #include <unistd.h>
@@ -18,19 +17,18 @@ namespace
 
 void print_usage()
 {
-    std::cout << R"(chat-client, (C) 2024 Falk Werner
-Sample chat client
+    std::cout << R"(notification-client, (C) 2024 Falk Werner
+Sample notification client
 
 Usage:
-    chat-client -e <endpoint> -u <user>
+    notification-client -e <endpoint> -u <user>
 
 Options:
-    -e, --endpoint <endpoint> - Endpoint to listen (default: /tmp/com_example_chat.sock)
-    -n, --user <user>         - Set user name (default: Bob)
+    -e, --endpoint <endpoint> - Endpoint to listen (default: /tmp/oizys_example_notify.sock)
     -h, --help                - Prints this message
 
 Example:
-    chat-client -e /tmp/chat.sock -u John
+    notification-client -e /tmp/notify.sock
 )";
 }
 
@@ -38,13 +36,12 @@ Example:
 struct application
 {
     application(int argc, char* argv[])
-    : endpoint("/tmp/com_example_chat.sock")
+    : endpoint("/tmp/oizys_example_notify.sock")
     , user("Bob")
     {
         option long_opts[] = {
             {"help", no_argument, nullptr, 'h'},
             {"endpoint", required_argument, nullptr, 'e'},
-            {"user", required_argument, nullptr, 'u'},
             {nullptr, 0, nullptr, 0}
         };
 
@@ -55,7 +52,7 @@ struct application
         while (!done)
         {
             int option_index = 0;
-            int const code = getopt_long(argc, argv, "e:u:h", long_opts, &option_index);
+            int const code = getopt_long(argc, argv, "e:h", long_opts, &option_index);
             switch (code)
             {
                 case -1:
@@ -66,9 +63,6 @@ struct application
                     break;
                 case 'e':
                     endpoint = optarg;
-                    break;
-                case 'u':
-                    user = optarg;
                     break;
                 default:
                     std::cerr << "error: invalid option" << std::endl;
@@ -86,51 +80,6 @@ struct application
     std::string user;
 };
 
-class console_reader
-{
-public: 
-    console_reader(boost::asio::io_context & context)
-    : user("unknown")
-    , input(context, STDERR_FILENO)
-    {
-    }
-
-    void start(std::string const & username, std::shared_ptr<oizys::session_i> session_)
-    {
-        user = username;
-        session = session_;
-        do_read();
-    }
-
-private:
-    void do_read() {
-        boost::asio::async_read_until(input, buffer, '\n',
-            [this](auto & error, auto length){
-                if (!error)
-                {
-                    std::istream stream(&buffer);
-                    std::string message;
-                    if (std::getline(stream, message))
-                    {
-                        buffer.consume(length); 
-                        if (message.size() > 0) {
-                            chat::chat_message msg;
-                            msg.set_user(user);
-                            msg.set_content(message);
-                            session->send(msg.SerializeAsString());
-                        }
-                        do_read();
-                    }
-            }
-        });
-    }
-
-private:
-    std::string user;
-    boost::asio::streambuf buffer;
-    boost::asio::posix::stream_descriptor input;
-    std::shared_ptr<oizys::session_i> session;
-};
 
 }
 
@@ -147,9 +96,8 @@ int main(int argc, char* argv[])
             boost::asio::signal_set signals(context, SIGINT, SIGTERM);
             signals.async_wait([&](auto &, auto){
                 shutdown_requested = true;
+                context.stop();
             });
-
-            console_reader console(context);
 
             boost::asio::local::stream_protocol::socket sock(context);
             sock.connect(app.endpoint);
@@ -157,20 +105,10 @@ int main(int argc, char* argv[])
             session->set_on_close([&shutdown_requested](){
                 shutdown_requested = true;
             });
-            session->set_on_message([&](auto const & message){
-                chat::chat_message msg;
-                if (msg.ParseFromString(message))
-                {
-                    std::cout << msg.user() << ": " << msg.content() << std::endl;
-                }
-                else
-                {
-                    shutdown_requested = true;
-                }
+            session->set_on_message([](auto const & message){
+                std::cout << message << std::endl;
             });
-
-            console.start(app.user, session);
-            
+                        
             while (!shutdown_requested)
             {
                 context.run_one();
@@ -191,6 +129,5 @@ int main(int argc, char* argv[])
         print_usage();
     }
 
-    google::protobuf::ShutdownProtobufLibrary();
     return app.exit_code;
 }

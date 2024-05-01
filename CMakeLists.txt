@@ -45,6 +45,7 @@ if(NOT(WITHOUT_EXAMPLES))
 
 add_subdirectory(example/echo)
 add_subdirectory(example/chat)
+add_subdirectory(example/notification)
 
 endif()
 

@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: Copyright 2024 Falk Werner
 
 #include <oizys/oizys.hpp>
-#include "messages.pb.h"
 
 #include <getopt.h>
 #include <unistd.h>
@@ -17,18 +16,18 @@ namespace
 
 void print_usage()
 {
-    std::cout << R"(chat-server, (C) 2024 Falk Werner
-Sample chat server
+    std::cout << R"(notification-server, (C) 2024 Falk Werner
+Sample notification server
 
 Usage:
-    chat-server -e <endpoint>
+    notification-server -e <endpoint>
 
 Options:
-    -e, --endpoint <endpoint> - Endpoint to listen (default: /tmp/com_example_chat.sock)
+    -e, --endpoint <endpoint> - Endpoint to listen (default: /tmp/oizys_example_notify.sock)
     -h, --help                - Prints this message
 
 Example:
-    chat-server -e /tmp/chat.sock
+    notification-server -e /tmp/notify.sock
 )";
 }
 
@@ -36,7 +35,7 @@ Example:
 struct application
 {
     application(int argc, char* argv[])
-    : endpoint("/tmp/com_example_chat.sock")
+    : endpoint("/tmp/oizys_example_notify.sock")
     {
         option long_opts[] = {   // NOLINT
             {"help", no_argument, nullptr, 'h'},
@@ -78,10 +77,10 @@ struct application
     std::string endpoint;
 };
 
-class chat_server
+class notification_server
 {
 public:
-    chat_server(boost::asio::io_context& context, std::string const & endpoint)
+    notification_server(boost::asio::io_context& context, std::string const & endpoint)
     : acceptor(context, boost::asio::local::stream_protocol::endpoint(endpoint))
     {
         do_accept();
@@ -147,19 +146,9 @@ private:
                     remove(id);
                 });
 
-                session->set_on_message([this, id](auto const & message){
-                    chat::chat_message msg;
-                    if (msg.ParseFromString(message))
-                    {
-                        std::cout << msg.user() << ": " << msg.content() << std::endl;
-                        send_all(message);
-                    }
-                    else
-                    {
-                        std::cerr << "error: invalid message" << std::endl;
-                        remove(id);
-                    }
-                });
+                // set on message handler to start reading
+                // this allows to detect a closed connection
+                session->set_on_message([](auto){});
             }
 
             do_accept();
@@ -187,6 +176,15 @@ private:
     uint32_t id = 0;
 };
 
+void notify(boost::asio::deadline_timer &timer, notification_server& server)
+{
+    timer.expires_from_now(boost::posix_time::seconds(10));
+    timer.async_wait([&timer, &server](auto){
+        server.send_all("notify");
+        notify(timer, server);
+    });    
+}
+
 }
 
 int main(int argc, char* argv[])
@@ -206,7 +204,10 @@ int main(int argc, char* argv[])
             });
 
             unlink(app.endpoint.c_str());
-            chat_server server(context, app.endpoint);
+            notification_server server(context, app.endpoint);
+
+            boost::asio::deadline_timer timer(context);
+            notify(timer, server);
 
             std::cout << "info: listening on " << app.endpoint << std::endl;
             
@@ -234,6 +235,5 @@ int main(int argc, char* argv[])
         print_usage();
     }
 
-    google::protobuf::ShutdownProtobufLibrary();
     return app.exit_code;
 }
