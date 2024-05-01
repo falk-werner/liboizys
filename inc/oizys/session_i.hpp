@@ -31,6 +31,8 @@ public:
     /// The method adds the message to the send queue and returns immediatly.
     /// The message will be send asynchronously.
     ///
+    /// @note Make sure, this method is only called from within the same
+    ///       thread, that runs the associated asio::io_context.
     /// @note There is no way to detect that or when the message is received
     ///       by the peer.
     ///
