@@ -15,35 +15,8 @@ asio_session::asio_session(boost::asio::local::stream_protocol::socket sock)
 
 asio_session::~asio_session()
 {
-    close();
+    asio_session::close();
 }
-
-void asio_session::connect_to(std::string const & endpoint, accept_handler handler)
-{
-    boost::asio::local::stream_protocol::endpoint endpoint_(endpoint);
-    auto self(shared_from_this());
-
-    socket_.async_connect(endpoint_, [self, handler](auto err) mutable {
-        if (!err)
-        {
-            self->start();
-        }
-        else
-        {
-            self.reset();
-        }
-
-        try
-        {
-            handler(self);
-        }
-        catch (...)
-        {
-            // swallow
-        }
-    });
-}
-
 
 void asio_session::send(std::string const & message)
 {
@@ -84,6 +57,7 @@ void asio_session::set_on_message(message_handler handler)
     }
 
     on_message = std::move(handler);
+    read_header();
 }
 
 void asio_session::close()
@@ -110,11 +84,6 @@ void asio_session::close()
             on_message = [](auto){};            
         }
     }
-}
-
-void asio_session::start()
-{
-    read_header();
 }
 
 void asio_session::read_header()

@@ -26,12 +26,12 @@ TEST(asio_session, send_message)
     boost::asio::local::connect_pair(read_sock, write_sock);
     
     auto session = std::make_shared<oizys::asio_session>(std::move(write_sock));
-    session->start();
     
     bool closed = false;
     session->set_on_close([&](){
         closed = true;
     });
+    session->set_on_message([](auto){});
 
     session->send("Hi");
 
@@ -72,12 +72,12 @@ TEST(asio_session, send_close_on_incomplete_header)
     boost::asio::local::connect_pair(read_sock, write_sock);
     
     auto session = std::make_shared<oizys::asio_session>(std::move(write_sock));
-    session->start();
     
     bool closed = false;
     session->set_on_close([&](){
         closed = true;
     });
+    session->set_on_message([](auto){});
 
     session->send("Hi");
 

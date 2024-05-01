@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: Copyright 2024 Falk Werner
 
 #include <oizys/oizys.hpp>
-#include <oizys/unstable/context.hpp>
 
 #include <getopt.h>
 #include <unistd.h>
@@ -32,11 +31,10 @@ Example:
 
 struct application
 {
-    // NOLINTNEXTLINE
     application(int argc, char* argv[])
     : endpoint("/tmp/com_example_echo.sock")
     {
-        option long_opts[] = {   // NOLINT
+        option long_opts[] = {
             {"help", no_argument, nullptr, 'h'},
             {"endpoint", required_argument, nullptr, 'e'},
             {nullptr, 0, nullptr, 0}
@@ -76,6 +74,40 @@ struct application
     std::string endpoint;
 };
 
+class echo_server
+{
+public:
+    echo_server(boost::asio::io_context& context, std::string const & endpoint)
+    : acceptor(context, boost::asio::local::stream_protocol::endpoint(endpoint))
+    {
+        do_accept();
+    }
+
+private:
+    void do_accept() {
+        acceptor.async_accept([this](auto err, auto sock) {
+            if (!err)
+            {
+                std::cout << "info: new connection" << std::endl;
+
+                auto session = oizys::create_session(std::move(sock));
+                session->set_on_close([](){
+                    std::cout << "info: connection closed" << std::endl;
+                });
+
+                session->set_on_message([session](auto const & message){
+                    std::cout << message << std::endl;
+                    session->send(message);
+                });
+            }
+
+            do_accept();
+        });        
+    }
+
+    boost::asio::local::stream_protocol::acceptor acceptor;
+};
+
 }
 
 
@@ -96,24 +128,9 @@ int main(int argc, char* argv[])
             });
 
             unlink(app.endpoint.c_str());
-            auto com_context = oizys::context_from_asio(context);
-            auto listener = com_context->new_listener(app.endpoint, [](auto session){
-                std::cout << "info: new connection" << std::endl;
-
-                session->set_on_close([](){
-                    std::cout << "info: connection closed" << std::endl;
-                });
-
-                session->set_on_message([session](auto const & message){
-                    std::cout << message << std::endl;
-                    session->send(message);
-                });
-            });
-
-            listener->start();
-            std::cout << "info: listening on " << app.endpoint << std::endl;
-
+            echo_server server(context, app.endpoint);
             
+            std::cout << "info: listening on " << app.endpoint << std::endl;
             while (!shutdown_requested)
             {
                 context.run();

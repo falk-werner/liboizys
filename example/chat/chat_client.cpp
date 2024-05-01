@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: Copyright 2024 Falk Werner
 
 #include <oizys/oizys.hpp>
-#include <oizys/unstable/context.hpp>
 
 #include <getopt.h>
 #include <unistd.h>
@@ -147,26 +146,17 @@ int main(int argc, char* argv[])
 
             console_reader console(context);
 
-            auto com_context = oizys::context_from_asio(context);
-            com_context->connect_to(app.endpoint, [&](auto session){
-                if (!session)
-                {
-                    std::cerr << "failed to connect" << std::endl;
-                    app.exit_code = EXIT_FAILURE;
-                    shutdown_requested = true;
-                    return;
-                }
-                
-                console.start(session);
-
-                session->set_on_close([&shutdown_requested](){
-                    shutdown_requested = true;
-                });
-
-                session->set_on_message([](auto const & message){
-                    std::cout << message << std::endl;
-                });
+            boost::asio::local::stream_protocol::socket sock(context);
+            sock.connect(app.endpoint);
+            auto session = oizys::create_session(std::move(sock));
+            session->set_on_close([&shutdown_requested](){
+                shutdown_requested = true;
             });
+            session->set_on_message([](auto const & message){
+                std::cout << message << std::endl;
+            });
+            
+            console.start(session);
             
             while (!shutdown_requested)
             {

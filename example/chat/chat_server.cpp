@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: Copyright 2024 Falk Werner
 
 #include <oizys/oizys.hpp>
-#include <oizys/unstable/context.hpp>
 
 #include <getopt.h>
 #include <unistd.h>
@@ -35,7 +34,6 @@ Example:
 
 struct application
 {
-    // NOLINTNEXTLINE
     application(int argc, char* argv[])
     : endpoint("/tmp/com_example_chat.sock")
     {
@@ -79,9 +77,15 @@ struct application
     std::string endpoint;
 };
 
-class session_manager
+class chat_server
 {
 public:
+    chat_server(boost::asio::io_context& context, std::string const & endpoint)
+    : acceptor(context, boost::asio::local::stream_protocol::endpoint(endpoint))
+    {
+        do_accept();
+    }
+
     void close()
     {
         for (auto const & item: sessions)
@@ -128,6 +132,30 @@ public:
     }
 
 private:
+    void do_accept() {
+        acceptor.async_accept([this](auto err, auto sock) {
+            if (!err)
+            { 
+                std::cout << "info: new connection" << std::endl;
+
+                auto session = oizys::create_session(std::move(sock));
+                auto const id = add(session);
+
+                session->set_on_close([this, id](){
+                    std::cout << "info: connection closed" << std::endl;
+                    remove(id);
+                });
+
+                session->set_on_message([this, id](auto const & message){
+                    std::cout << message << std::endl;
+                    send_all(message);
+                });
+            }
+
+            do_accept();
+        });        
+    }
+
     uint32_t create_id()
     {
         while ((id == 0) || (has_id(id)))
@@ -144,6 +172,7 @@ private:
         return (it != sessions.end());
     }
 
+    boost::asio::local::stream_protocol::acceptor acceptor;
     std::unordered_map<uint32_t, std::shared_ptr<oizys::session_i>> sessions;
     uint32_t id = 0;
 };
@@ -157,9 +186,7 @@ int main(int argc, char* argv[])
     if (!app.show_help)
     {
         try 
-        {
-            auto manager = std::make_shared<session_manager>();
-            
+        {            
             bool shutdown_requested = false;
             boost::asio::io_context context;
             boost::asio::signal_set signals(context, SIGINT, SIGTERM);
@@ -169,33 +196,16 @@ int main(int argc, char* argv[])
             });
 
             unlink(app.endpoint.c_str());
-            auto com_context = oizys::context_from_asio(context);
-            auto listener = com_context->new_listener(app.endpoint, [manager](auto session){
-                std::cout << "info: new connection" << std::endl;
+            chat_server server(context, app.endpoint);
 
-                auto const id = manager->add(session);
-
-                session->set_on_close([manager, id](){
-                    std::cout << "info: connection closed" << std::endl;
-                    manager->remove(id);
-                });
-
-                session->set_on_message([manager, id](auto const & message){
-                    std::cout << message << std::endl;
-                    manager->send_all(message);
-                });
-            });
-
-            listener->start();
             std::cout << "info: listening on " << app.endpoint << std::endl;
-
             
             while (!shutdown_requested)
             {
                 context.run();
             }
             
-            manager->close();
+            server.close();
             std::cout << "info: shutdown" << std::endl;
         }
         catch (std::exception const & ex)

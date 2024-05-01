@@ -13,15 +13,10 @@ option(WITHOUT_EXAMPLES "Disable examples" OFF)
 
 set(CMAKE_CXX_STANDARD 17)
 add_compile_options(-Wall -Wextra -Wpedantic -Werror)
-set(CMAKE_CXX_CLANG_TIDY clang-tidy -extra-arg=-std=c++17 
-    -checks=-*,modernize-*,readability-*,-modernize-use-trailing-return-type,-clang-diagnostic-error)
 
 add_library(oizys_obj OBJECT
-    src/context.cpp
-    src/asio_context.cpp
-    src/asio_borrowed_context.cpp
+    src/session.cpp
     src/asio_session.cpp
-    src/asio_listener.cpp
     src/com_message.cpp
     src/version.cpp)
 set_target_properties(oizys_obj PROPERTIES
@@ -30,6 +25,8 @@ set_target_properties(oizys_obj PROPERTIES
     VISIBILITY_INLINES_HIDDEN 1)
 target_include_directories(oizys_obj PRIVATE inc)
 target_compile_definitions(oizys_obj PRIVATE OIZYS_EXPORT)
+set_target_properties(oizys_obj PROPERTIES CXX_CLANG_TIDY clang-tidy -extra-arg=-std=c++17 
+-checks=-*,modernize-*,readability-*,-modernize-use-trailing-return-type,-clang-diagnostic-error)
 
 add_library(oizys_static STATIC $<TARGET_OBJECTS:oizys_obj>)
 target_include_directories(oizys_static PUBLIC inc)
@@ -64,19 +61,12 @@ include(cmake/coverage.cmake)
 
 add_executable(alltests 
     test-src/test_com_message.cpp
-    test-src/test_asio_listener.cpp
-    test-src/test_context.cpp
-    test-src/test_unstable_context.cpp
-    test-src/test_asio_borrowed_context.cpp
-    test-src/test_asio_context.cpp
     test-src/test_asio_session.cpp
     test-src/test_asio_session_read.cpp
     test-src/test_asio_session_write.cpp
+    test-src/test_session.cpp
     test-src/test_version.cpp)
 target_include_directories(alltests PRIVATE src)
-
-# disable clang-tidy for unit test executables
-set_target_properties(alltests PROPERTIES CXX_CLANG_TIDY "")
 
 target_link_libraries(alltests PRIVATE oizys_static GTest::gtest GTest::gtest_main)
 gtest_discover_tests(alltests EXTRA_ARGS "--gtest_output=xml:test-results.xml")

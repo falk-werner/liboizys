@@ -5,7 +5,6 @@
 #define OIZYS_ASIO_SESSION_HPP
 
 #include "oizys/session_i.hpp"
-#include "oizys/accept_handler.hpp"
 
 #include "com_message.hpp"
 
@@ -30,9 +29,6 @@ public:
     virtual void set_on_close(close_handler handler) override;
     virtual void set_on_message(message_handler handler) override;
     virtual void close() override;
-
-    void start();
-    void connect_to(std::string const & endpoint, accept_handler handler);
 
 private:
     void read_header();

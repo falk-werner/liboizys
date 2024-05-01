@@ -60,3 +60,11 @@ TEST(com_message, fail_to_construct_too_large_message)
         oizys::com_message message(content);
     });
 }
+
+TEST(com_message, fail_to_parse_header_reserved)
+{
+    oizys::com_message message;
+    message.header[0] = 0x01;
+    size_t length;
+    ASSERT_FALSE(message.parse_header(length));
+}

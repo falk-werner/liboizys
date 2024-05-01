@@ -92,30 +92,23 @@ int main(int argc, char* argv[])
     {
         try 
         {
-            auto context = oizys::context_new();
+            boost::asio::io_context context;
             bool done = false;
 
-            context->connect_to(app.endpoint, [&app, &done](auto session){
-                if (!session)
-                {
-                    std::cerr << "failed to connect" << std::endl;
-                    app.exit_code = EXIT_FAILURE;
-                    done = true;
-                    return;
-                }
+            boost::asio::local::stream_protocol::socket sock(context);
+            sock.connect(app.endpoint);
+            auto session = oizys::create_session(std::move(sock));
                 
-                session->set_on_message([&done](auto const & message){
-                    std::cout << message << std::endl;
-                    done = true;
-                });
-
-                session->send(app.message);
+            session->set_on_message([&done](auto const & message){
+                std::cout << message << std::endl;
+                done = true;
             });
 
+            session->send(app.message);
             
             while (!done)
             {
-                context->run();
+                context.run_one();
             }
             
         }
