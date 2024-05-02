@@ -40,7 +40,7 @@ fn main() -> std::io::Result<()> {
     stream.read_exact(&mut data)?;
 
     let message = String::from_utf8(data).unwrap();
-    println!("{}: {}", size, message);
+    println!("{}", message);
 
     Ok(())
 }
