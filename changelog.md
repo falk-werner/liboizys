@@ -2,6 +2,7 @@
 
 - provide error code on close
 - add python examples
+- add rust examples
 
 # v0.1.0
 
