@@ -3,3 +3,4 @@
 /install/
 /.vscode/
 /.clang-tidy
+/gmon.out
