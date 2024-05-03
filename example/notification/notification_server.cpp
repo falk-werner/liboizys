@@ -178,8 +178,9 @@ private:
 
 void notify(boost::asio::deadline_timer &timer, notification_server& server)
 {
-    timer.expires_from_now(boost::posix_time::seconds(10));
+    timer.expires_from_now(boost::posix_time::seconds(5));
     timer.async_wait([&timer, &server](auto){
+        std::cout << "notify" << std::endl;
         server.send_all("notify");
         notify(timer, server);
     });    
