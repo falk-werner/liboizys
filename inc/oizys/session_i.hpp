@@ -38,7 +38,8 @@ public:
     ///       by the peer.
     ///
     /// @param message message to send.
-    virtual void send(std::string const & message) = 0;
+    /// @return Count of messages in the write queue
+    virtual size_t send(std::string const & message) = 0;
 
     /// @brief Sets a handler that is invoked when the session is closed.
     ///
