@@ -25,7 +25,7 @@ class asio_session
 public:
     asio_session(boost::asio::local::stream_protocol::socket sock);
     virtual ~asio_session() override;
-    virtual void send(std::string const & message) override;
+    virtual size_t send(std::string const & message) override;
     virtual void set_onclose(close_handler handler) override;
     virtual void set_onmessage(message_handler handler) override;
     virtual void close() override;

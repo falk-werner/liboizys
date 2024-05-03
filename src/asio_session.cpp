@@ -18,13 +18,16 @@ asio_session::~asio_session()
     asio_session::close();
 }
 
-void asio_session::send(std::string const & message)
+size_t asio_session::send(std::string const & message)
 {
     write_queue.emplace(message);
-    if (write_queue.size() == 1)
+    auto const count = write_queue.size(); 
+    if (count == 1)
     {
         write_header();
     }
+
+    return count;
 }
 
 void asio_session::set_onclose(close_handler handler)
