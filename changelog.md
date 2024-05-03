@@ -4,6 +4,7 @@
 - send now returns the count of messages in the send queue
 - add python examples
 - add rust examples
+- add go examples
 
 # v0.1.0
 
