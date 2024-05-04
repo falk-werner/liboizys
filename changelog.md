@@ -5,6 +5,7 @@
 - add python examples
 - add rust examples
 - add go examples
+- add zig examples
 
 # v0.1.0
 
