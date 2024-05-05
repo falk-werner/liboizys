@@ -1,0 +1,11 @@
+.{
+    .name = "chat-client",
+    .version = "0.1.0",
+    .paths = .{""},
+    .dependencies = .{
+        .protobuf = .{
+            .url = "https://github.com/Arwalk/zig-protobuf/archive/refs/tags/v1.0.4.tar.gz",
+            .hash = "1220bdfa6a89127fb8469aaa50f7ca5cdb808415f95dd24fa9ee9df5ed99f598cf63",
+        },
+    },
+}

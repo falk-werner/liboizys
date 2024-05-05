@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: Copyright 2024 Falk Werner
+
 const std = @import("std");
 const net = std.net;
 const os = std.os.linux;
